@@ -11,8 +11,7 @@ export default function App() {
     <View style={styles.container}>
       <Header name={appName} />
       <StatusBar style="auto" />
-      <Input />
-      
+      <Input focus={true} />
     </View>
   );
 }

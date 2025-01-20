@@ -11,10 +11,14 @@ interface InputProps {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
+  modalContainer: {
+    backgroundColor: 'lightgrey',
+    padding: 50,
+    borderRadius: 10
+  }
 });
 
 const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility }: InputProps) => {
@@ -26,25 +30,26 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility }: I
   }
 
   return (
-    <Modal visible={modalVisibility} animationType='slide'>
+    <Modal transparent={true} visible={modalVisibility} animationType='slide'>
       <View style={styles.container}>
-        <TextInput 
-          value={text} 
-          onChangeText={(newText) => setText(newText)}
-          placeholder='type here'
-          autoFocus={initialFocus}
-          onSubmitEditing={(e) => {
-            e.target.blur()
-            setIsFocused(false)
-          }}
-          onFocus={() => setIsFocused(true)}
-        />
-        
-        {text.length > 0 && isFocused && <Text>{text.length} characters are entered</Text>}
-        {text.length >= 3 && !isFocused && <Text>Thank you</Text>}
-        {text.length < 3 && !isFocused && <Text>Please type more than 3 characters</Text>}
-        <Button title="confirm" onPress={handleConfirm}></Button>
-        
+        <View style={styles.modalContainer}>
+          <TextInput 
+            value={text} 
+            onChangeText={(newText) => setText(newText)}
+            placeholder='type here'
+            autoFocus={initialFocus}
+            onSubmitEditing={(e) => {
+              e.target.blur()
+              setIsFocused(false)
+            }}
+            onFocus={() => setIsFocused(true)}
+          />
+          
+          {text.length > 0 && isFocused && <Text>{text.length} characters are entered</Text>}
+          {text.length >= 3 && !isFocused && <Text>Thank you</Text>}
+          {text.length < 3 && !isFocused && <Text>Please type more than 3 characters</Text>}
+          <Button title="confirm" onPress={handleConfirm}></Button>
+        </View>
       </View>
     </Modal>
   )

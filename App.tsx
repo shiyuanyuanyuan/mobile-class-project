@@ -6,12 +6,18 @@ import Input from './components/Input'
 
 export default function App() {
   const appName = 'my app'
+  const [receivetText, setReceiveText] = useState('')
+  function handleInputData(data: string){
+    console.log("app user type: ", data)
+    setReceiveText(data)
+  }
 
   return (
     <View style={styles.container}>
       <Header name={appName} />
       <StatusBar style="auto" />
-      <Input focus={true} />
+      <Input focus={true} inputHandler={handleInputData} />
+      <Text>{receivetText}</Text>
     </View>
   );
 }

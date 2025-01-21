@@ -17,18 +17,28 @@ export default function App() {
     setModalVisible(true)
   }
 
+  function handleModalDismiss() {
+    console.log("app user cancel")
+    setReceiveText('')
+    setModalVisible(false)
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topContainer}>
         <Header name={appName} />
         <StatusBar style="auto" />
-        <Input focus={true} inputHandler={handleInputData} modalVisibility={modalVisible} />
+        <Input 
+          focus={true} 
+          inputHandler={handleInputData} 
+          modalVisibility={modalVisible}
+          onCancel={handleModalDismiss}
+        />
         <Button title="Add a goal" onPress={handleModal}></Button>
       </View>
       <View style={styles.backContainer}>
-        <Text>{receivetText}</Text>
-      </View>
-      
+        <Text style={styles.goalText}>{receivetText}</Text>
+      </View>      
     </SafeAreaView>
   );
 }
@@ -37,18 +47,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
   },
-  topContainer:{
+  topContainer: {
     flex: 1,
+    padding: 20,
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
-  backContainer:{
+  backContainer: {
     flex: 4,
-    backgroundColor: "lightgrey",
+    backgroundColor: "#E6E6FA",
     alignItems: 'center',
-    justifyContent: 'center',
-  }
+    paddingTop: 20,
+  },
+  goalText: {
+    color: 'blue',
+    fontSize: 18,
+  },
 
 });

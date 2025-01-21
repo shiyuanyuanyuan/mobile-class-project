@@ -19,7 +19,6 @@ export default function App() {
 
   function handleModalDismiss() {
     console.log("app user cancel")
-    setReceiveText('')
     setModalVisible(false)
   }
 
@@ -37,7 +36,7 @@ export default function App() {
         <Button title="Add a goal" onPress={handleModal}></Button>
       </View>
       <View style={styles.backContainer}>
-        <Text style={styles.goalText}>{receivetText}</Text>
+        {receivetText && <Text style={styles.goalText}>{receivetText}</Text>}
       </View>      
     </SafeAreaView>
   );
@@ -63,6 +62,7 @@ const styles = StyleSheet.create({
   goalText: {
     color: 'blue',
     fontSize: 18,
+    backgroundColor: 'grey',
   },
 
 });

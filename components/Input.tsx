@@ -1,4 +1,4 @@
-import { View, TextInput, Text, Button, StyleSheet, Modal, Alert } from 'react-native'
+import { View, TextInput, Text, Button, StyleSheet, Modal, Alert, Image } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
 
@@ -16,9 +16,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modalContainer: {
-    backgroundColor: 'white',
-    padding: 50,
-    borderRadius: 10
+    backgroundColor: '#F2F2F2',
+    padding: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -26,10 +28,18 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   inputContainer: {
+    width: '30%',
+    maxWidth: '30%',
     borderWidth: 1,
     borderColor: 'purple',
     padding: 2,
+    margin: 10,
   },
+  image: {
+    width: 100,
+    height: 100,
+    margin: 4,
+  }
 });
 
 const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onCancel }: InputProps) => {
@@ -68,6 +78,16 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onC
     <Modal transparent={true} visible={modalVisibility} animationType='slide'>
       <View style={styles.container}>
         <View style={styles.modalContainer}>
+          <Image 
+            source={require('../assets/target.png')} 
+            alt="target image"
+            style={styles.image} 
+          />
+          <Image 
+            source={{ uri: 'https://cdn-icons-png.flaticon.com/512/2617/2617812.png' }} 
+            alt="target image"
+            style={styles.image}     
+          />
           <TextInput 
             style={styles.inputContainer}
             value={text} 

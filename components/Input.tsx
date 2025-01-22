@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
     padding: 2,
     margin: 10,
   },
+  button: {
+    width: '30%',
+    margin: 4,
+  },
   image: {
     width: 100,
     height: 100,
@@ -59,11 +63,11 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onC
       "Are you sure you want to cancel?",
       [
         {
-          text: "No",
+          text: "cancel",
           style: "cancel"
         },
         { 
-          text: "Yes", 
+          text: "ok", 
           onPress: () => {
             onCancel();
             setText('');
@@ -105,15 +109,19 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onC
           {text.length >= 3 && !isFocused && <Text>Thank you</Text>}
           {text.length < 3 && !isFocused && <Text>Please type more than 3 characters</Text>}
           <View style={styles.buttonContainer}>
-            <Button 
-              title="Cancel" 
-              onPress={handleCancel} 
-            />
-            <Button 
-              title="Confirm" 
-              onPress={handleConfirm} 
-              disabled={text.length < 3}
-            />          
+            <View style={styles.button}>
+              <Button 
+                title="Cancel" 
+                onPress={handleCancel} 
+              />
+            </View>
+            <View style={styles.button}>
+              <Button 
+                title="Confirm" 
+                onPress={handleConfirm} 
+                disabled={text.length < 3}
+              />
+            </View>          
           </View>
         </View>
       </View>

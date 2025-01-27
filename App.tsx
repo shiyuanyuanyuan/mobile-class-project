@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList} from 'react-native';
 import Header from './components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
+import GoalItem from './components/GoalItem'
 export interface Goal {
   text: string;
   id: number;
@@ -37,6 +38,10 @@ export default function App() {
     setModalVisible(false)
   }
 
+  function deleteGoal(id: number) {
+    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id))
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topContainer}>
@@ -51,7 +56,16 @@ export default function App() {
         <Button title="Add a goal" onPress={handleModal}></Button>
       </View>
       <View style={styles.backContainer}>
-        <ScrollView
+        <FlatList
+        contentContainerStyle={styles.alignCenter}
+        data={goals}
+        renderItem={({item}) => 
+          <GoalItem goalObj={item} deleteGoal={deleteGoal} />
+        }
+        />
+
+
+        {/* <ScrollView
         contentContainerStyle={styles.alignCenter}
         >
           {goals.map((goal) => {
@@ -61,7 +75,7 @@ export default function App() {
               </View>
             )
           })}
-        </ScrollView>
+        </ScrollView> */}
       </View>      
     </SafeAreaView>
   );
@@ -85,16 +99,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
   },
-  goalText: {
-    color: 'blue',
-    fontSize: 18,
-    backgroundColor: 'grey',
-    marginVertical: 5,
-    padding: 2,
-    borderRadius: 5,
-  },
   alignCenter: {
     alignItems: 'center',
-  },
+  }
 
 });

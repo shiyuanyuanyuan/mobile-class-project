@@ -1,16 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, SafeAreaView} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView} from 'react-native';
 import Header from './components/Header'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
-
+export interface Goal {
+  text: string;
+  id: number;
+}
 export default function App() {
   const appName = 'my app'
-  const [receivetText, setReceiveText] = useState('')
+  // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
+  const [goals, setGoals] = useState<Goal[]>([])
+
+  useEffect(() => {
+    console.log("goals updated: ", goals)
+  }, [goals])
+
   function handleInputData(data: string){
     console.log("app user type: ", data)
-    setReceiveText(data)
+    // setReceiveText(data)
+    // define a new goal
+    const newGoal: Goal = {
+      text: data,
+      id: Math.random()
+    }
+    setGoals((prevGoals) => [...prevGoals, newGoal])
     setModalVisible(false)
   }
   function handleModal(){
@@ -36,7 +51,17 @@ export default function App() {
         <Button title="Add a goal" onPress={handleModal}></Button>
       </View>
       <View style={styles.backContainer}>
-        {receivetText && <Text style={styles.goalText}>{receivetText}</Text>}
+        <ScrollView
+        contentContainerStyle={styles.alignCenter}
+        >
+          {goals.map((goal) => {
+            return (
+              <View key={goal.id}>
+              <Text style={styles.goalText}>{goal.text}</Text>
+              </View>
+            )
+          })}
+        </ScrollView>
       </View>      
     </SafeAreaView>
   );
@@ -64,6 +89,12 @@ const styles = StyleSheet.create({
     color: 'blue',
     fontSize: 18,
     backgroundColor: 'grey',
+    marginVertical: 5,
+    padding: 2,
+    borderRadius: 5,
+  },
+  alignCenter: {
+    alignItems: 'center',
   },
 
 });

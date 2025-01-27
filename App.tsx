@@ -1,16 +1,32 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, SafeAreaView} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList} from 'react-native';
 import Header from './components/Header'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
-
+import GoalItem from './components/GoalItem'
+export interface Goal {
+  text: string;
+  id: number;
+}
 export default function App() {
   const appName = 'my app'
-  const [receivetText, setReceiveText] = useState('')
+  // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
+  const [goals, setGoals] = useState<Goal[]>([])
+
+  useEffect(() => {
+    console.log("goals updated: ", goals)
+  }, [goals])
+
   function handleInputData(data: string){
     console.log("app user type: ", data)
-    setReceiveText(data)
+    // setReceiveText(data)
+    // define a new goal
+    const newGoal: Goal = {
+      text: data,
+      id: Math.random()
+    }
+    setGoals((prevGoals) => [...prevGoals, newGoal])
     setModalVisible(false)
   }
   function handleModal(){
@@ -20,6 +36,10 @@ export default function App() {
   function handleModalDismiss() {
     console.log("app user cancel")
     setModalVisible(false)
+  }
+
+  function deleteGoal(id: number) {
+    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id))
   }
 
   return (
@@ -36,7 +56,26 @@ export default function App() {
         <Button title="Add a goal" onPress={handleModal}></Button>
       </View>
       <View style={styles.backContainer}>
-        {receivetText && <Text style={styles.goalText}>{receivetText}</Text>}
+        <FlatList
+        contentContainerStyle={styles.alignCenter}
+        data={goals}
+        renderItem={({item}) => 
+          <GoalItem goalObj={item} deleteGoal={deleteGoal} />
+        }
+        />
+
+
+        {/* <ScrollView
+        contentContainerStyle={styles.alignCenter}
+        >
+          {goals.map((goal) => {
+            return (
+              <View key={goal.id}>
+              <Text style={styles.goalText}>{goal.text}</Text>
+              </View>
+            )
+          })}
+        </ScrollView> */}
       </View>      
     </SafeAreaView>
   );
@@ -60,10 +99,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
   },
-  goalText: {
-    color: 'blue',
-    fontSize: 18,
-    backgroundColor: 'grey',
-  },
+  alignCenter: {
+    alignItems: 'center',
+  }
 
 });

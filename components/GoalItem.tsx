@@ -10,11 +10,11 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
     return (
         <View style={styles.container}>
           <Text style={styles.goalText}>{goalObj.text}</Text>
-          <View style={styles.buttonContainer}>
+          <View style={styles.deleteButton}>
             <Button 
               title="X" 
               onPress={() => deleteGoal(goalObj.id)} 
-              color="#808080"
+              color="#0096FF"
             />
           </View>
         </View>
@@ -28,18 +28,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 5,
-        borderRadius: 5,
-        backgroundColor: 'grey',
+        borderRadius: 3,
+        backgroundColor: 'lightgrey',
     },
     goalText: {
-        color: 'blue',
-        fontSize: 18,
-        backgroundColor: 'grey',
-        padding: 5,      
-      },
-      buttonContainer: {
-        padding: 2,
+        color: 'purple',
+        fontSize: 20,
+        fontWeight: '500',
+        padding: 10,
+    },
+    deleteButton: {
+        backgroundColor: 'lightgrey',
+        padding: 8,
         borderRadius: 5,
-      }
+    },
 })

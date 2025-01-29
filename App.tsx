@@ -92,10 +92,8 @@ export default function App() {
               </View>
             ) : null
           }
-          ItemSeparatorComponent={({leadingItem}) => (
-            <View style={styles.separatorContainer}>
-              <View style={[styles.separator, {width: leadingItem ? leadingItem.text.length * 15 : 0}]} />
-            </View>
+          ItemSeparatorComponent={() => (
+            <View style={styles.separator} />
           )}
           renderItem={({item}) => 
             <GoalItem goalObj={item} deleteGoal={deleteGoal} />
@@ -158,13 +156,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
-  separatorContainer: {
-    width: '100%',
-    alignItems: 'center',
-    paddingHorizontal: 20
-  },
   separator: {
-    height: 2,
+    height: 3,
     backgroundColor: 'grey',
     marginVertical: 10,
   }

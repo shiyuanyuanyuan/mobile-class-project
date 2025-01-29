@@ -60,17 +60,15 @@ export default function App() {
           contentContainerStyle={styles.alignCenter}
           data={goals}
           ListEmptyComponent={
-            <Text style={styles.emptyText}>No goals to show</Text>
+            <Text style={styles.header}>No goals to show</Text>
           }
           ListHeaderComponent={
             goals.length > 0 ? (
-              <Text style={styles.headerText}>My Goal List</Text>
+              <Text style={styles.header}>My Goal List</Text>
             ) : null
           }
-          
           ListFooterComponent={
             goals.length > 0 ? (
-              <View style={styles.footerContainer}>
                 <Button 
                   title="Delete all" 
                   color="#0096FF"
@@ -89,9 +87,9 @@ export default function App() {
                     );
                   }} 
                 />
-              </View>
             ) : null
           }
+          ListFooterComponentStyle={styles.footer}
           ItemSeparatorComponent={() => (
             <View style={styles.separator} />
           )}
@@ -139,20 +137,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  emptyText: {
-    fontSize: 24,
-    color: 'purple',
-    marginTop: 20,
-    fontWeight: '500',
-  },
-  headerText: {
+  header: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'purple',
     marginBottom: 20,
     textAlign: 'center',
   },
-  footerContainer: {
+  footer: {
     marginTop: 20,
     marginBottom: 20,
   },

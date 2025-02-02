@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList} from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList, Alert } from 'react-native';
 import Header from './components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
@@ -57,11 +57,45 @@ export default function App() {
       </View>
       <View style={styles.backContainer}>
         <FlatList
-        contentContainerStyle={styles.alignCenter}
-        data={goals}
-        renderItem={({item}) => 
-          <GoalItem goalObj={item} deleteGoal={deleteGoal} />
-        }
+          contentContainerStyle={styles.alignCenter}
+          data={goals}
+          ListEmptyComponent={
+            <Text style={styles.header}>No goals to show</Text>
+          }
+          ListHeaderComponent={
+            goals.length > 0 ? (
+              <Text style={styles.header}>My Goal List</Text>
+            ) : null
+          }
+          ListFooterComponent={
+            goals.length > 0 ? (
+                <Button 
+                  title="Delete all" 
+                  color="#0096FF"
+                  onPress={() => {
+                    Alert.alert(
+                      "Delete All Goals",
+                      "Are you sure you want to delete all goals?",
+                      [
+                        { text: "No", style: "cancel" },
+                        { 
+                          text: "Yes", 
+                          onPress: () => setGoals([]),
+                          style: "destructive"
+                        }
+                      ]
+                    );
+                  }} 
+                />
+            ) : null
+          }
+          ListFooterComponentStyle={styles.footer}
+          ItemSeparatorComponent={() => (
+            <View style={styles.separator} />
+          )}
+          renderItem={({item}) => 
+            <GoalItem goalObj={item} deleteGoal={deleteGoal} />
+          }
         />
 
 
@@ -101,6 +135,22 @@ const styles = StyleSheet.create({
   },
   alignCenter: {
     alignItems: 'center',
+    width: '100%',
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'purple',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  footer: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  separator: {
+    height: 3,
+    backgroundColor: 'grey',
+    marginVertical: 10,
   }
-
 });

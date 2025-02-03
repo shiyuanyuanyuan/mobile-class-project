@@ -4,17 +4,19 @@ import Header from './components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
 import GoalItem from './components/GoalItem'
-import { app } from './Firebase/firebaseSetup'
-export interface Goal {
+import { database } from './Firebase/firebaseSetup'
+import { goalData } from './Firebase/firestoreHelper'
+import { writeToDB } from './Firebase/firestoreHelper'
+export interface GoalDB { 
   text: string;
   id: number;
 }
 export default function App() {
-  console.log(app)
+  console.log(database)
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const [goals, setGoals] = useState<Goal[]>([])
+  const [goals, setGoals] = useState<GoalDB[]>([])
 
   useEffect(() => {
     console.log("goals updated: ", goals)
@@ -24,12 +26,12 @@ export default function App() {
     console.log("app user type: ", data)
     // setReceiveText(data)
     // define a new goal
-    const newGoal: Goal = {
+    const newGoal: goalData = {
       text: data,
-      id: Math.random()
     }
-    setGoals((prevGoals) => [...prevGoals, newGoal])
-    setModalVisible(false)
+    writeToDB(newGoal, 'goals')
+    // setGoals((prevGoals) => [...prevGoals, newGoal])
+    // setModalVisible(false)
   }
   function handleModal(){
     setModalVisible(true)

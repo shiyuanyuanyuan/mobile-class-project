@@ -4,29 +4,54 @@ import Header from './components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
 import GoalItem from './components/GoalItem'
-export interface Goal {
+import { database } from './Firebase/firebaseSetup'
+import { goalData } from './Firebase/firestoreHelper'
+import { writeToDB } from './Firebase/firestoreHelper'
+import { collection } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
+import { deleteFromDB } from './Firebase/firestoreHelper'
+export interface GoalFrontDB { 
   text: string;
-  id: number;
+  id: string;
 }
 export default function App() {
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const [goals, setGoals] = useState<Goal[]>([])
+  const [goals, setGoals] = useState<GoalFrontDB[]>([])
 
   useEffect(() => {
-    console.log("goals updated: ", goals)
-  }, [goals])
+    // start the listener
+    const unsubscribe = onSnapshot(collection(database, 'goals'), (querySnapshot) => {
+      if (querySnapshot.empty) {
+        console.log("No goals found")
+      } else {
+        let newArrayOfGoals: GoalFrontDB[] = []
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id)
+          newArrayOfGoals.push({
+            ...(doc.data() as goalData),
+            id: doc.id
+          })
+        })
+        console.log("newgoals: ", newArrayOfGoals)
+        setGoals(newArrayOfGoals)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   function handleInputData(data: string){
     console.log("app user type: ", data)
     // setReceiveText(data)
     // define a new goal
-    const newGoal: Goal = {
+    const newGoal: goalData = {
       text: data,
-      id: Math.random()
     }
-    setGoals((prevGoals) => [...prevGoals, newGoal])
+    writeToDB(newGoal, 'goals')
+    // setGoals((prevGoals) => [...prevGoals, newGoal])
     setModalVisible(false)
   }
   function handleModal(){
@@ -38,7 +63,10 @@ export default function App() {
     setModalVisible(false)
   }
 
-  function deleteGoal(id: number) {
+  function deleteGoal(id: string) {
+    // delete the goal from the database
+    deleteFromDB(id, 'goals')
+    // update the goals state
     setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id))
   }
 

@@ -4,11 +4,13 @@ import Header from './components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from './components/Input'
 import GoalItem from './components/GoalItem'
+import { app } from './Firebase/firebaseSetup'
 export interface Goal {
   text: string;
   id: number;
 }
 export default function App() {
+  console.log(app)
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)

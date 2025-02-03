@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { GoalDB } from '@/App';
+import { GoalFrontDB } from '@/App';
 
 type GoalItemProps = {
-    goalObj: GoalDB
-    deleteGoal: (id: number) => void
+    goalObj: GoalFrontDB
+    deleteGoal: (id: string) => void
 }
 
 const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {

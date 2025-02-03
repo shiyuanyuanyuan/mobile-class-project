@@ -7,20 +7,41 @@ import GoalItem from './components/GoalItem'
 import { database } from './Firebase/firebaseSetup'
 import { goalData } from './Firebase/firestoreHelper'
 import { writeToDB } from './Firebase/firestoreHelper'
-export interface GoalDB { 
+import { collection } from 'firebase/firestore';
+import { onSnapshot } from 'firebase/firestore';
+import { deleteFromDB } from './Firebase/firestoreHelper'
+export interface GoalFrontDB { 
   text: string;
-  id: number;
+  id: string;
 }
 export default function App() {
-  console.log(database)
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const [goals, setGoals] = useState<GoalDB[]>([])
+  const [goals, setGoals] = useState<GoalFrontDB[]>([])
 
   useEffect(() => {
-    console.log("goals updated: ", goals)
-  }, [goals])
+    // start the listener
+    const unsubscribe = onSnapshot(collection(database, 'goals'), (querySnapshot) => {
+      if (querySnapshot.empty) {
+        console.log("No goals found")
+      } else {
+        let newArrayOfGoals: GoalFrontDB[] = []
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id)
+          newArrayOfGoals.push({
+            ...(doc.data() as goalData),
+            id: doc.id
+          })
+        })
+        console.log("newgoals: ", newArrayOfGoals)
+        setGoals(newArrayOfGoals)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
 
   function handleInputData(data: string){
     console.log("app user type: ", data)
@@ -31,7 +52,7 @@ export default function App() {
     }
     writeToDB(newGoal, 'goals')
     // setGoals((prevGoals) => [...prevGoals, newGoal])
-    // setModalVisible(false)
+    setModalVisible(false)
   }
   function handleModal(){
     setModalVisible(true)
@@ -42,7 +63,10 @@ export default function App() {
     setModalVisible(false)
   }
 
-  function deleteGoal(id: number) {
+  function deleteGoal(id: string) {
+    // delete the goal from the database
+    deleteFromDB(id, 'goals')
+    // update the goals state
     setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== id))
   }
 

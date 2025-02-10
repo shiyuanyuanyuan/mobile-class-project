@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { GoalFrontDB } from '@/App';
+import { GoalFrontDB } from '../app/index';
+import { Link } from 'expo-router';
 
 type GoalItemProps = {
     goalObj: GoalFrontDB
@@ -10,6 +11,9 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
     return (
         <View style={styles.container}>
           <Text style={styles.goalText}>{goalObj.text}</Text>
+          <Link asChild href={`/goals/${goalObj.id}`}>
+            <Button title="info" />
+          </Link>
           <View style={styles.deleteButton}>
             <Button 
               title="X" 
@@ -17,6 +21,8 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
               color="#0096FF"
             />
           </View>
+          
+          
         </View>
     )
 }

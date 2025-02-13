@@ -1,5 +1,6 @@
 import { database } from "./firebaseSetup"
-import { collection, addDoc, deleteDoc, doc } from "firebase/firestore"
+import { collection, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore"
+
 export interface goalData {
     text: string
 }
@@ -21,5 +22,20 @@ export async function deleteFromDB(id: string, collectionName: string){
         console.log("Document deleted with ID: ", id)
     } catch (error) {
         console.error("Error deleting document: ", error)
+    }
+}
+
+export async function readDocFromDB(id: string, collectionName: string){
+    try {
+        const docRef = doc(database, collectionName, id)
+        const docSnap = await getDoc(docRef)
+        if (docSnap.exists()){
+            return docSnap.data()
+        } else {
+            console.log("No such document!")
+            return null
+        }
+    } catch (error) {
+        console.error("Error reading document: ", error)
     }
 }

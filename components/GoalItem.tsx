@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 import { GoalFrontDB } from '../app/index';
 import { router } from 'expo-router';
 import PressableButton from './PressableButton';
+import { Ionicons } from '@expo/vector-icons';
 type GoalItemProps = {
     goalObj: GoalFrontDB
     deleteGoal: (id: string) => void
@@ -26,9 +27,10 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
             <PressableButton
               pressedHandler={() => deleteGoal(goalObj.id)}
               pressedStyle={styles.pressed}
-              // componentStyle={styles.deleteButton}
+              componentStyle={styles.icon}
             >
-              <Text>X</Text>
+              {/* <Text>X</Text> */}
+              <Ionicons name="trash" size={24} />
             </PressableButton>
             {/* <Button 
               title="X" 
@@ -69,5 +71,10 @@ const styles = StyleSheet.create({
     },
     android_ripple: {
         color: 'purple',
+    },
+    icon: {
+        backgroundColor: 'lightgrey',
+        padding: 5,
+        borderRadius: 5,
     }
 })

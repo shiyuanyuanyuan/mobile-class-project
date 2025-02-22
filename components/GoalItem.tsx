@@ -9,7 +9,13 @@ type GoalItemProps = {
 
 const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
     return (
-        <Pressable style={styles.container}
+        <Pressable 
+          android_ripple={styles.android_ripple}
+          style={({pressed}) => [
+            styles.container,
+            pressed && styles.pressed
+          ]}
+          // style={styles.container}
           onPress={() => router.navigate(`/goals/${goalObj.id}`)}
         >
           <Text style={styles.goalText}>{goalObj.text}</Text>
@@ -50,4 +56,11 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 5,
     },
+    pressed: {
+        backgroundColor: 'grey',
+        opacity: 0.5,
+    },
+    android_ripple: {
+        color: 'blue',
+    }
 })

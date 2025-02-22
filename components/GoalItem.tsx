@@ -26,7 +26,7 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
             <PressableButton
               pressedHandler={() => deleteGoal(goalObj.id)}
               pressedStyle={styles.pressed}
-              componentStyle={styles.deleteButton}
+              // componentStyle={styles.deleteButton}
             >
               <Text>X</Text>
             </PressableButton>

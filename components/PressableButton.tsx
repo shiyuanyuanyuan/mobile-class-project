@@ -5,6 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 
 interface PressableButtonProps {
     pressedHandler: () => void;
+    pressedInHandler?: () => void;
     pressedStyle?: StyleProp<ViewStyle>;
     children: React.ReactNode;
     componentStyle?: StyleProp<ViewStyle>;

@@ -10,6 +10,7 @@ import { writeToDB } from '../Firebase/firestoreHelper'
 import { collection } from 'firebase/firestore';
 import { onSnapshot } from 'firebase/firestore';
 import { deleteFromDB } from '../Firebase/firestoreHelper'
+import PressableButton from '@/components/PressableButton';
 export interface GoalFrontDB { 
   text: string;
   id: string;
@@ -82,7 +83,13 @@ export default function App() {
           modalVisibility={modalVisible}
           onCancel={handleModalDismiss}
         />
-        <Button title="Add a goal" onPress={handleModal}></Button>
+        {/* <Button title="Add a goal" onPress={handleModal}></Button> */}
+        <PressableButton
+          pressedHandler={handleModal}
+          componentStyle={styles.addButton}
+        >
+          <Text style={{ color: 'white' }}>Add a goal</Text>
+        </PressableButton>  
       </View>
       <View style={styles.backContainer}>
         <FlatList
@@ -181,5 +188,13 @@ const styles = StyleSheet.create({
     height: 3,
     backgroundColor: 'grey',
     marginVertical: 10,
+  },
+  addButton: {
+    backgroundColor: 'purple',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
   }
 });

@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 import { GoalFrontDB } from '../app/index';
-import { Link } from 'expo-router';
-
+import { router } from 'expo-router';
+import PressableButton from './PressableButton';
+import { Ionicons } from '@expo/vector-icons';
 type GoalItemProps = {
     goalObj: GoalFrontDB
     deleteGoal: (id: string) => void
@@ -9,21 +10,37 @@ type GoalItemProps = {
 
 const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
     return (
-        <View style={styles.container}>
+        <Pressable 
+          android_ripple={styles.android_ripple}
+          style={({pressed}) => [
+            styles.container,
+            pressed && styles.pressed
+          ]}
+          // style={styles.container}
+          onPress={() => router.navigate(`/goals/${goalObj.id}`)}
+        >
           <Text style={styles.goalText}>{goalObj.text}</Text>
-          <Link asChild href={`/goals/${goalObj.id}`}>
-            <Button title="info" />
-          </Link>
+            {/* <Link asChild href={`/goals/${goalObj.id}`}>
+              <Button title="info" />
+            </Link> */}
           <View style={styles.deleteButton}>
-            <Button 
+            <PressableButton
+              pressedHandler={() => deleteGoal(goalObj.id)}
+              pressedStyle={styles.pressed}
+              componentStyle={styles.icon}
+            >
+              {/* <Text>X</Text> */}
+              <Ionicons name="trash" size={24} />
+            </PressableButton>
+            {/* <Button 
               title="X" 
               onPress={() => deleteGoal(goalObj.id)} 
               color="#0096FF"
-            />
+            /> */}
           </View>
           
           
-        </View>
+        </Pressable>
     )
 }
 
@@ -48,4 +65,16 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 5,
     },
+    pressed: {
+        backgroundColor: 'grey',
+        opacity: 0.5,
+    },
+    android_ripple: {
+        color: 'purple',
+    },
+    icon: {
+        backgroundColor: 'lightgrey',
+        padding: 5,
+        borderRadius: 5,
+    }
 })

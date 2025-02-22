@@ -49,6 +49,7 @@ export default function App() {
     // define a new goal
     const newGoal: goalData = {
       text: data,
+      isWarning: false
     }
     writeToDB(newGoal, 'goals')
     // setGoals((prevGoals) => [...prevGoals, newGoal])

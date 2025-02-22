@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 import { GoalFrontDB } from '../app/index';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 
 type GoalItemProps = {
     goalObj: GoalFrontDB
@@ -9,11 +9,13 @@ type GoalItemProps = {
 
 const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
     return (
-        <View style={styles.container}>
+        <Pressable style={styles.container}
+          onPress={() => router.navigate(`/goals/${goalObj.id}`)}
+        >
           <Text style={styles.goalText}>{goalObj.text}</Text>
-          <Link asChild href={`/goals/${goalObj.id}`}>
-            <Button title="info" />
-          </Link>
+            {/* <Link asChild href={`/goals/${goalObj.id}`}>
+              <Button title="info" />
+            </Link> */}
           <View style={styles.deleteButton}>
             <Button 
               title="X" 
@@ -23,7 +25,7 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
           </View>
           
           
-        </View>
+        </Pressable>
     )
 }
 

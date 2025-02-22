@@ -1,8 +1,9 @@
 import { database } from "./firebaseSetup"
-import { collection, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore"
+import { collection, addDoc, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore"
 
 export interface goalData {
     text: string
+    isWarning: boolean
 }
 
 export async function writeToDB(data: goalData, collectionName: string){
@@ -37,5 +38,14 @@ export async function readDocFromDB(id: string, collectionName: string){
         }
     } catch (error) {
         console.error("Error reading document: ", error)
+    }
+}
+
+export async function addWarningToDB(id: string, collectionName: string){
+    try {
+        const docRef = doc(database, collectionName, id)
+        await setDoc(docRef, { isWarning: true }, { merge: true })
+    } catch (error) {
+        console.error("Error adding warning to document: ", error)
     }
 }

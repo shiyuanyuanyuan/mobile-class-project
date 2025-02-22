@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 import { GoalFrontDB } from '../app/index';
 import { router } from 'expo-router';
-
+import PressableButton from './PressableButton';
 type GoalItemProps = {
     goalObj: GoalFrontDB
     deleteGoal: (id: string) => void
@@ -23,11 +23,18 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
               <Button title="info" />
             </Link> */}
           <View style={styles.deleteButton}>
-            <Button 
+            <PressableButton
+              pressedHandler={() => deleteGoal(goalObj.id)}
+              pressedStyle={styles.pressed}
+              componentStyle={styles.deleteButton}
+            >
+              <Text>X</Text>
+            </PressableButton>
+            {/* <Button 
               title="X" 
               onPress={() => deleteGoal(goalObj.id)} 
               color="#0096FF"
-            />
+            /> */}
           </View>
           
           
@@ -61,6 +68,6 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     android_ripple: {
-        color: 'blue',
+        color: 'purple',
     }
 })

@@ -11,15 +11,19 @@ import { collection } from 'firebase/firestore';
 import { onSnapshot } from 'firebase/firestore';
 import { deleteFromDB } from '../Firebase/firestoreHelper'
 import PressableButton from '@/components/PressableButton';
+import { useRouter } from 'expo-router';
+
 export interface GoalFrontDB { 
   text: string;
   id: string;
 }
+
 export default function App() {
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
   const [goals, setGoals] = useState<GoalFrontDB[]>([])
+  const router = useRouter();
 
   useEffect(() => {
     // start the listener
@@ -126,11 +130,24 @@ export default function App() {
             ) : null
           }
           ListFooterComponentStyle={styles.footer}
-          ItemSeparatorComponent={() => (
-            <View style={styles.separator} />
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View style={[
+              styles.separator,
+              highlighted && { backgroundColor: 'purple' }
+            ]} />
           )}
-          renderItem={({item}) => 
-            <GoalItem goalObj={item} deleteGoal={deleteGoal} />
+          renderItem={({item, separators}) => 
+            <GoalItem 
+              goalObj={item} 
+              deleteGoal={deleteGoal}
+              onPress={() => {
+                separators.highlight();
+                router.navigate(`/goals/${item.id}`);
+              }}
+              onPressOut={() => {
+                separators.unhighlight();
+              }}
+            />
           }
         />
 

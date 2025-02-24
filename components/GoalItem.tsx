@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable, Alert } from 'react-native';
 import { GoalFrontDB } from '../app/index';
-import { router } from 'expo-router';
 import PressableButton from './PressableButton';
 import { Ionicons } from '@expo/vector-icons';
-type GoalItemProps = {
-    goalObj: GoalFrontDB
-    deleteGoal: (id: string) => void
+
+interface GoalItemProps {
+    goalObj: GoalFrontDB;
+    deleteGoal: (id: string) => void;
+    onPress?: () => void;
+    onPressOut?: () => void;
 }
 
-const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
+const GoalItem = ({goalObj, deleteGoal, onPress, onPressOut}: GoalItemProps) => {
     return (
         <Pressable 
           android_ripple={styles.android_ripple}
@@ -16,8 +18,26 @@ const GoalItem = ({goalObj, deleteGoal}: GoalItemProps) => {
             styles.container,
             pressed && styles.pressed
           ]}
-          // style={styles.container}
-          onPress={() => router.navigate(`/goals/${goalObj.id}`)}
+          onPress={onPress}
+          onPressOut={onPressOut}
+          onLongPress={() => {
+            Alert.alert(
+              "Delete Goal",
+              "Are you sure you want to delete this goal?",
+              [
+                {
+                  text: "Cancel",
+                  style: "cancel"
+                },
+                {
+                  text: "Delete",
+                  onPress: () => deleteGoal(goalObj.id),
+                  style: "destructive"
+                }
+              ]
+            );
+          }}
+          delayLongPress={500}
         >
           <Text style={styles.goalText}>{goalObj.text}</Text>
             {/* <Link asChild href={`/goals/${goalObj.id}`}>

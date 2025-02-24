@@ -2,6 +2,8 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { readDocFromDB, goalData, addWarningToDB} from '@/Firebase/firestoreHelper';
+import PressableButton from '@/components/PressableButton';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function GoalDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -34,7 +36,13 @@ export default function GoalDetails() {
       <Stack.Screen options={{
         headerTitle: goal? warning ? "Warning" : goal.text : "",
         headerRight: () => (
-            <Button title="Warning" onPress={warnUser} />
+          <PressableButton
+            pressedHandler={warnUser}
+            componentStyle={styles.warningButton}
+          >
+            <Ionicons name="warning" size={24} color="white" />
+          </PressableButton>
+            // <Button title="Warning" onPress={warnUser} />
         )
       }} />
       <Text style={warning && styles.warningText}>{goal?.text}</Text>
@@ -46,4 +54,9 @@ const styles = StyleSheet.create({
   warningText: {
     color: "red",
   },
+  warningButton: {
+    backgroundColor: 'purple',
+    padding: 10,
+    borderRadius: 5,
+  }
 });

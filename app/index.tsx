@@ -5,16 +5,13 @@ import React, { useState, useEffect } from 'react'
 import Input from '../components/Input'
 import GoalItem from '../components/GoalItem'
 import { database } from '../Firebase/firebaseSetup'
-import { goalData } from '../Firebase/firestoreHelper'
+import { goalData, GoalFrontDB } from '@/types'
 import { writeToDB } from '../Firebase/firestoreHelper'
 import { collection } from 'firebase/firestore';
 import { onSnapshot } from 'firebase/firestore';
 import { deleteFromDB } from '../Firebase/firestoreHelper'
 import PressableButton from '@/components/PressableButton';
-export interface GoalFrontDB { 
-  text: string;
-  id: string;
-}
+
 export default function App() {
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')

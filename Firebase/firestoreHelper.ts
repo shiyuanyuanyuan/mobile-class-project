@@ -1,12 +1,9 @@
 import { database } from "./firebaseSetup"
-import { collection, addDoc, deleteDoc, doc, getDoc, setDoc } from "firebase/firestore"
+import { collection, addDoc, deleteDoc, doc, getDoc, setDoc, getDocs } from "firebase/firestore"
+import { User, goalData } from "@/types"
 
-export interface goalData {
-    text: string
-    isWarning: boolean
-}
 
-export async function writeToDB(data: goalData, collectionName: string){
+export async function writeToDB(data: goalData | User, collectionName: string){
     try {
         const docRef = await addDoc(collection(database, collectionName), data)
         console.log("Document written with ID: ", docRef.id)
@@ -47,5 +44,23 @@ export async function addWarningToDB(id: string, collectionName: string){
         await setDoc(docRef, { isWarning: true }, { merge: true })
     } catch (error) {
         console.error("Error adding warning to document: ", error)
+    }
+}
+
+export async function readAllFromDB(collectionName: string){
+    try {
+        const querySnapshot = await getDocs(collection(database, collectionName))
+        if (querySnapshot.empty){
+            console.log("No documents found")
+            return null
+        } else {
+            let data: User[] = []
+            querySnapshot.forEach((doc) => {
+                data.push(doc.data() as User)
+            })
+            return data
+        }
+    } catch (error) {
+        console.error("Error reading all documents: ", error)
     }
 }

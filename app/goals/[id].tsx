@@ -1,7 +1,9 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useLocalSearchParams, Stack, router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { readDocFromDB, goalData, addWarningToDB} from '@/Firebase/firestoreHelper';
+import { readDocFromDB, addWarningToDB} from '@/Firebase/firestoreHelper';
+import { goalData } from '@/types';
+import GoalUsers from '@/components/GoalUsers';
 import PressableButton from '@/components/PressableButton';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -46,6 +48,7 @@ export default function GoalDetails() {
         )
       }} />
       <Text style={warning && styles.warningText}>{goal?.text}</Text>
+      <GoalUsers goalId={id}/>
     </View>
   );
 }

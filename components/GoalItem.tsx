@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, Button, Pressable, Alert } from 'react-native';
-import { GoalFrontDB } from '../app/index';
+import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
+import { GoalFrontDB } from '@/types';
+import { router } from 'expo-router';
 import PressableButton from './PressableButton';
 import { Ionicons } from '@expo/vector-icons';
 

@@ -1,12 +1,37 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/Firebase/firebaseSetup';
 
 export default function Signup() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSignup = async () => {
+    if (email === '' || password === '' || confirmPassword === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    // Better email validation using regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address');
+      return;
+    }   
+    if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.replace('/(protected)/index');
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -38,7 +63,7 @@ export default function Signup() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log('Register pressed')}>
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 

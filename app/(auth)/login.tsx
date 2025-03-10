@@ -1,11 +1,26 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/Firebase/firebaseSetup';
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    if (email === '' || password === '') {
+      alert('Please fill in all fields');
+      return;
+    }
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      router.replace('/(protected)/');
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -28,7 +43,7 @@ export default function Login() {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={() => console.log('Login pressed')}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 

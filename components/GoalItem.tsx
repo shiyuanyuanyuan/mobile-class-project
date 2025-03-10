@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Button, Pressable, Alert } from 'react-native';
 import { GoalFrontDB } from '@/types';
 import { router } from 'expo-router';
 import PressableButton from './PressableButton';

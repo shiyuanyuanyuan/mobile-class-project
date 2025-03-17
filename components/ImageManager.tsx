@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, Button, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { ImageSourcePropType } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-export default function ImageManager() {
+interface ImageManagerProps {
+    imageHandler: (image: string) => void;
+}
+
+export default function ImageManager({ imageHandler }: ImageManagerProps) {
     const [permissionInformation, setPermissionInformation] = useState<ImagePicker.PermissionStatus>();
-    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const verifyPermissions = async () => {
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -27,6 +33,11 @@ export default function ImageManager() {
                 allowsEditing: true,
             });
             console.log(result);
+            if (!result.canceled) {
+                setSelectedImage(result.assets[0].uri);
+                imageHandler(result.assets[0].uri);
+            }
+            console.log(selectedImage);
         } catch (err) {
             console.log(err);
         }
@@ -35,6 +46,14 @@ export default function ImageManager() {
   return (
     <View>
       <Button title="Take Image" onPress={takeImageHandler} />
+      {selectedImage && <Image source={{ uri: selectedImage}} style={styles.image} />}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+    image: {
+        width: 100,
+        height: 100,
+    },
+});

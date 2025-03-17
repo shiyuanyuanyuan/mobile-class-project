@@ -12,7 +12,7 @@ import { onSnapshot } from 'firebase/firestore';
 import { deleteFromDB } from '../../Firebase/firestoreHelper'
 import PressableButton from '@/components/PressableButton';
 import { useRouter } from 'expo-router';
-
+import { UserInput } from '@/types';
 
 export default function App() {
   const appName = 'my app'
@@ -58,14 +58,15 @@ export default function App() {
     }
   }, []);
 
-  function handleInputData(data: string){
+  function handleInputData(data: UserInput){
     console.log("app user type: ", data)
     // setReceiveText(data)
     // define a new goal
     const newGoal: goalData = {
-      text: data,
+      text: data.text,
       isWarning: false,
-      owner: auth.currentUser?.uid || ''
+      owner: auth.currentUser?.uid || '',
+      image: data.image
     }
     writeToDB(newGoal, 'goals')   
     // setGoals((prevGoals) => [...prevGoals, newGoal])

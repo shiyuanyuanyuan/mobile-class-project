@@ -11,6 +11,7 @@ export interface User {
 export interface goalData {
     text: string
     isWarning: boolean
+    owner: string
 }
 
 export interface GoalFrontDB { 

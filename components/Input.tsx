@@ -1,6 +1,7 @@
 import { View, TextInput, Text, Button, StyleSheet, Modal, Alert, Image } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
+import ImageManager from './ImageManager'
 
 interface InputProps {
   focus?: boolean;
@@ -104,6 +105,7 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onC
             }}
             onFocus={() => setIsFocused(true)}
           />
+          <ImageManager />
           
           {text.length > 0 && isFocused && <Text>{text.length} characters are entered</Text>}
           {text.length >= 3 && !isFocused && <Text>Thank you</Text>}

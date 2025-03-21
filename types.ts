@@ -7,10 +7,16 @@ export interface User {
       goalId: string;
   }
 
+export interface UserInput {
+    text: string;
+    image: string;
+}
 
 export interface goalData {
     text: string
     isWarning: boolean
+    owner: string
+    image: string
 }
 
 export interface GoalFrontDB { 

@@ -4,15 +4,15 @@ import Header from '../../components/Header'
 import React, { useState, useEffect } from 'react'
 import Input from '../../components/Input'
 import GoalItem from '../../components/GoalItem'
-import { database } from '../../Firebase/firebaseSetup'
+import { database, auth } from '../../Firebase/firebaseSetup'
 import { goalData, GoalFrontDB } from '@/types'
 import { writeToDB } from '../../Firebase/firestoreHelper'
-import { collection } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { onSnapshot } from 'firebase/firestore';
 import { deleteFromDB } from '../../Firebase/firestoreHelper'
 import PressableButton from '@/components/PressableButton';
 import { useRouter } from 'expo-router';
-
+import { UserInput } from '@/types';
 
 export default function App() {
   const appName = 'my app'
@@ -22,37 +22,53 @@ export default function App() {
   const router = useRouter();
 
   useEffect(() => {
-    // start the listener
-    const unsubscribe = onSnapshot(collection(database, 'goals'), (querySnapshot) => {
-      if (querySnapshot.empty) {
-        console.log("No goals found")
-      } else {
-        let newArrayOfGoals: GoalFrontDB[] = []
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id)
-          newArrayOfGoals.push({
-            ...(doc.data() as goalData),
-            id: doc.id
+    // Handle case where user might not be authenticated yet
+    if (!auth.currentUser) {
+      console.log("No authenticated user found");
+      return;
+    }
+    
+    // Start the listener with where clause to match security rules
+    const unsubscribe = onSnapshot(
+      query(
+        collection(database, 'goals'), 
+        where("owner", "==", auth.currentUser.uid)
+      ), 
+      (querySnapshot) => {
+        if (querySnapshot.empty) {
+          console.log("No goals found")
+          setGoals([]);
+        } else {
+          let newArrayOfGoals: GoalFrontDB[] = []
+          querySnapshot.forEach((doc) => {
+            console.log(doc.id)
+            newArrayOfGoals.push({
+              ...(doc.data() as goalData),
+              id: doc.id
+            })
           })
-        })
-        console.log("newgoals: ", newArrayOfGoals)
-        setGoals(newArrayOfGoals)
+          console.log("newgoals: ", newArrayOfGoals)
+          setGoals(newArrayOfGoals)
+        }
       }
-    })
+    );
+    
     return () => {
       unsubscribe()
     }
-  }, [])
+  }, []);
 
-  function handleInputData(data: string){
+  function handleInputData(data: UserInput){
     console.log("app user type: ", data)
     // setReceiveText(data)
     // define a new goal
     const newGoal: goalData = {
-      text: data,
-      isWarning: false
+      text: data.text,
+      isWarning: false,
+      owner: auth.currentUser?.uid || '',
+      image: data.image
     }
-    writeToDB(newGoal, 'goals')
+    writeToDB(newGoal, 'goals')   
     // setGoals((prevGoals) => [...prevGoals, newGoal])
     setModalVisible(false)
   }

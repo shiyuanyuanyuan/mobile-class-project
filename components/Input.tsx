@@ -1,10 +1,11 @@
 import { View, TextInput, Text, Button, StyleSheet, Modal, Alert, Image } from 'react-native'
 import React from 'react'
 import { useState } from 'react'
-
+import ImageManager from './ImageManager'
+import { UserInput } from '../types'
 interface InputProps {
   focus?: boolean;
-  inputHandler: (data: string) => void;
+  inputHandler: (data: UserInput) => void;
   modalVisibility: boolean;
   onCancel: () => void;
 }
@@ -49,12 +50,21 @@ const styles = StyleSheet.create({
 const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onCancel }: InputProps) => {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(initialFocus)
+  const [imageUri, setImageUri] = useState<string | null>(null)
 
   const handleConfirm = () => {
     console.log("user has typed: ", text)
-    inputHandler(text)
+    inputHandler({ text, image: imageUri || '' })
     setText('')
     setIsFocused(false)
+    setImageUri(null)
+  }
+
+  const handleImage = (uri: string) => {
+    console.log("user has selected image: ", uri)
+    if (uri) {
+      setImageUri(uri)
+    }
   }
 
   const handleCancel = () => {
@@ -104,6 +114,7 @@ const Input = ({ focus: initialFocus = false, inputHandler, modalVisibility, onC
             }}
             onFocus={() => setIsFocused(true)}
           />
+          <ImageManager imageHandler={handleImage} />
           
           {text.length > 0 && isFocused && <Text>{text.length} characters are entered</Text>}
           {text.length >= 3 && !isFocused && <Text>Thank you</Text>}

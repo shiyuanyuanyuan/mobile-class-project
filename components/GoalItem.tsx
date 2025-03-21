@@ -12,6 +12,7 @@ interface GoalItemProps {
 }
 
 const GoalItem = ({goalObj, deleteGoal, onPress, onPressOut}: GoalItemProps) => {
+
     return (
         <Pressable 
           android_ripple={styles.android_ripple}

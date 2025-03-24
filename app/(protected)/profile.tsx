@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
-import { auth } from "@/Firebase/firebaseSetup";
+import { View, Text, Button } from "react-native";
+import LocationManager from "@/components/LocationManager";
 
 export default function Profile() {
     return (
         <View>
-            <Text>{auth.currentUser?.email}</Text>
+            <LocationManager />
         </View>
     )
 }   

@@ -13,6 +13,8 @@ import { deleteFromDB } from '../../Firebase/firestoreHelper'
 import PressableButton from '@/components/PressableButton';
 import { useRouter } from 'expo-router';
 import { UserInput } from '@/types';
+import { ref, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '../../Firebase/firebaseSetup'
 
 export default function App() {
   const appName = 'my app'
@@ -58,15 +60,40 @@ export default function App() {
     }
   }, []);
 
-  function handleInputData(data: UserInput){
-    console.log("app user type: ", data)
-    // setReceiveText(data)
-    // define a new goal
-    const newGoal: goalData = {
+  async function fetchImage(imageUri: string){
+    try {
+      const response = await fetch(imageUri)
+      if (!response.ok) {
+        throw new Error('Image not found')
+      }
+      const blob = await response.blob()
+      const imageName = imageUri.substring(imageUri.lastIndexOf('/') + 1);
+      const imageRef = ref(storage, `images/${imageName}`)
+      const uploadResult = await uploadBytesResumable(imageRef, blob);
+      return uploadResult.metadata.fullPath;
+    } catch (error) {
+      console.error('Error fetching image:', error)
+    }
+  }
+
+  async function handleInputData(data: UserInput){
+    let storedImageUrl = '';
+    try {
+      if (data.image) {
+        const url = await fetchImage(data.image)
+        if (url) {
+          storedImageUrl = url
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching image:', error)
+    }
+    
+    let newGoal: goalData = {
       text: data.text,
       isWarning: false,
       owner: auth.currentUser?.uid || '',
-      image: data.image
+      image: storedImageUrl
     }
     writeToDB(newGoal, 'goals')   
     // setGoals((prevGoals) => [...prevGoals, newGoal])

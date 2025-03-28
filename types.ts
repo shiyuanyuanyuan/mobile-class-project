@@ -16,7 +16,7 @@ export interface goalData {
     text: string
     isWarning: boolean
     owner: string
-    image: string
+    image?: string
 }
 
 export interface GoalFrontDB { 

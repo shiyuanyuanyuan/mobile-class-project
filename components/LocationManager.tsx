@@ -2,6 +2,9 @@ import {Alert, Button, Text, View, Image, StyleSheet} from 'react-native';
 import { useEffect, useState } from 'react';
 import { getCurrentPositionAsync, useForegroundPermissions, LocationObject } from 'expo-location';
 import { router, useLocalSearchParams } from 'expo-router';
+import { writeToDB } from '@/Firebase/firestoreHelper';
+import { auth } from '@/Firebase/firebaseSetup';
+
 export interface LocationData {
     latitude: number;
     longitude: number;
@@ -62,8 +65,8 @@ export default function LocationManager() {
         } catch (error) {
             console.error('Navigation error:', error);
         }
-    }
-
+    }  
+    
     return (
         <View>
             <Button title="Locate" onPress={locateUserHandler} />
@@ -77,6 +80,16 @@ export default function LocationManager() {
                         source={{
                             uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=AIzaSyAtLtdEnSQqCxleOlrkBvnGJcDPoYr8yGc`
                         }} 
+                    />
+                    <Button title="Save Location" 
+                    disabled={!location}
+                    onPress={
+                        async () => {
+                            await writeToDB({location}, 'users', auth.currentUser?.uid);
+                            router.navigate('/');
+                        }
+                    }
+                     
                     />
                 </View>
             )}

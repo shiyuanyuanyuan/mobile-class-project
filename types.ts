@@ -1,6 +1,10 @@
 export interface User {
-    id: number;
-    name: string;
+    id?: number;
+    name?: string;
+    location: {
+        latitude: number;
+        longitude: number;
+    }
   }
   
   export interface GoalUsersProps {

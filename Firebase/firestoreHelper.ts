@@ -3,12 +3,21 @@ import { collection, addDoc, deleteDoc, doc, getDoc, setDoc, getDocs } from "fir
 import { User, goalData } from "@/types"
 
 
-export async function writeToDB(data: goalData | User, collectionName: string){
+export async function writeToDB(data: goalData | User, collectionName: string, id?: string) {
     try {
-        const docRef = await addDoc(collection(database, collectionName), data)
-        console.log("Document written with ID: ", docRef.id)
+        if (id) {
+            // Use setDoc with merge:true when ID is provided
+            const docRef = doc(database, collectionName, id);
+            await setDoc(docRef, data, { merge: true });
+            console.log("Document updated with ID: ", id);
+        } else {
+            // Use addDoc for auto-generated IDs (existing behavior)
+            const docRef = await addDoc(collection(database, collectionName), data);
+            console.log("Document written with ID: ", docRef.id);
+        }
     } catch (error) {
-        console.error("Error adding document: ", error)
+        console.error("Error adding document: ", error);
+        throw error;
     }
 }
 

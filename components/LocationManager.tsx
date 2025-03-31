@@ -8,18 +8,17 @@ export interface LocationData {
 }
 export default function LocationManager() {
     const params = useLocalSearchParams();
-    const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
-    const [permisionResponse, requestPermission] = useForegroundPermissions();
     const [location, setLocation] = useState<LocationData | null>(null);
+    const [permisionResponse, requestPermission] = useForegroundPermissions();
 
     useEffect(() => {
         if (params.latitude && params.longitude) {
-            setSelectedLocation({
+            setLocation({
                 latitude: parseFloat(params.latitude as string),
                 longitude: parseFloat(params.longitude as string)
             });
         }
-    }, []);
+    }, [params.latitude, params.longitude]);
     
     async function verifyPermissions() {
         try {
@@ -42,7 +41,6 @@ export default function LocationManager() {
                 return;
             }
             const response = await getCurrentPositionAsync();
-            console.log(response);
             setLocation({
                 latitude: response.coords.latitude,
                 longitude: response.coords.longitude
@@ -54,7 +52,13 @@ export default function LocationManager() {
 
     async function chooseLocationHandler() {
         try {
-            router.push('/(protected)/map');
+            router.push({
+                pathname: '/(protected)/map',
+                params: location ? {
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                } : undefined
+            });
         } catch (error) {
             console.error('Navigation error:', error);
         }

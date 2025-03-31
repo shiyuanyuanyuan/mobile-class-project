@@ -4,7 +4,6 @@ import MapView, { Marker, Region } from 'react-native-maps';
 import { useState, useEffect } from 'react';
 import { LocationData} from "@/components/LocationManager";
 import { router, useLocalSearchParams } from 'expo-router';
-import * as Location from 'expo-location';
 
 export default function MapScreen() {
     const params = useLocalSearchParams();

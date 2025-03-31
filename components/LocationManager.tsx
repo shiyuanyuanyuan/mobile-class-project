@@ -2,7 +2,7 @@ import {Alert, Button, Text, View, Image, StyleSheet} from 'react-native';
 import { useEffect, useState } from 'react';
 import { getCurrentPositionAsync, useForegroundPermissions, LocationObject } from 'expo-location';
 import { router, useLocalSearchParams } from 'expo-router';
-import { writeToDB } from '@/Firebase/firestoreHelper';
+import { readDocFromDB, writeToDB } from '@/Firebase/firestoreHelper';
 import { auth } from '@/Firebase/firebaseSetup';
 
 export interface LocationData {
@@ -13,6 +13,23 @@ export default function LocationManager() {
     const params = useLocalSearchParams();
     const [location, setLocation] = useState<LocationData | null>(null);
     const [permisionResponse, requestPermission] = useForegroundPermissions();
+
+    useEffect(() => {
+        async function fetchUserData() {
+            if (auth.currentUser?.uid) {
+                try {
+                    const userData = await readDocFromDB(auth.currentUser.uid, 'users');
+                    console.log(userData);
+                    if (userData?.location) {
+                        setLocation(userData.location);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+        }
+        fetchUserData();
+    }, []); 
 
     useEffect(() => {
         if (params.latitude && params.longitude) {

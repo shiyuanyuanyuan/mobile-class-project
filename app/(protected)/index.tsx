@@ -15,8 +15,20 @@ import { useRouter } from 'expo-router';
 import { UserInput } from '@/types';
 import { ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '../../Firebase/firebaseSetup'
+import { setNotificationHandler } from 'expo-notifications';
+
+setNotificationHandler({
+  handleNotification: async () => {
+    return{
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }
+  },
+});
 
 export default function App() {
+  
   const appName = 'my app'
   // const [receivetText, setReceiveText] = useState('')
   const [modalVisible, setModalVisible] = useState(false)

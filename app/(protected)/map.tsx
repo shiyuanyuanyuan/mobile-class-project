@@ -1,19 +1,24 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, Text, Button } from 'react-native';
 import MapView, { Marker, Region } from 'react-native-maps';
-import { useState } from 'react';
-import { LocationData } from "@/components/LocationManager";
-import { router } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { LocationData} from "@/components/LocationManager";
+import { router, useLocalSearchParams } from 'expo-router';
 
 export default function MapScreen() {
+    const params = useLocalSearchParams();
     const [region, setRegion] = useState<Region>({
-        latitude: 49.2827,
-        longitude: -123.1207,
+        latitude: params.latitude ? parseFloat(params.latitude as string) : 49.2827,
+        longitude: params.longitude ? parseFloat(params.longitude as string) : -123.1207,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
-    })
-    const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
-
+    });
+    const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
+        params.latitude && params.longitude ? {
+            latitude: parseFloat(params.latitude as string),
+            longitude: parseFloat(params.longitude as string)
+        } : null
+    );
     const confirmLocationHandler = (region: Region) => {
         router.navigate({
             pathname: '/profile',
